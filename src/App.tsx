@@ -7,6 +7,7 @@ function App() {
       <p>Öğrenci No: [230541040]</p>
       <p>Yaş:[21]</p>
       <p>Hobiler: Müzik dinlemek</p>
+      <p>Bu proje Web Tasarımı dersi için başarıyla tamamlanmıştır. 2026</p>
     </div>
   );
 }
