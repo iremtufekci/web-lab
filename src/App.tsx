@@ -6,6 +6,7 @@ function App() {
       <p>Ad Soyad: İrem Tüfekçi</p>
       <p>Öğrenci No: [230541040]</p>
       <p>Yaş:[21]</p>
+      <p>Hobiler: Müzik dinlemek</p>
     </div>
   );
 }
