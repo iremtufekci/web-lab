@@ -17,4 +17,4 @@ Bu proje, Web Tasarımı ve Programlama dersi LAB-1 kapsamında Vite + React + T
 npm install
 ## Erişilebilirlik Testi
 Lighthouse Accessibility Skoru:
-![Lighthouse Skoru](/raporsonucu.png)
+![Lighthouse Skoru](./public/raporsonucu.png)
