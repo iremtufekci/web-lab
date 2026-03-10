@@ -1,153 +1,106 @@
+// src/App.tsx
+import Button from './components/Button.tsx'; // .jsx uzantısını sildik ve yolu düzelttik
+import Input from './components/Input.tsx';
+import Card from './components/Card.tsx';
+
 function App() {
   return (
-    <div className="App">
-      <a href="#main-content" className="skip-link">Ana içeriğe atla</a>
-      {/* 1. Header: Navigasyon kısmı */}
-      <header>
-  <h1>İrem Tüfekçi</h1> {/* Eksik olan ana başlık */}
-  <nav aria-label="Ana Menü"> {/* aria-label eklendi */}
-    <ul>
-      <li><a href="#hakkimda">Hakkımda</a></li>
-      <li><a href="#projeler">Projeler</a></li>
-      <li><a href="#iletisim">İletişim</a></li>
-    </ul>
-  </nav>
-</header>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 font-sans">
+      
+      {/* --- HEADER & NAV --- */}
+      <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
+        <nav className="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
+          <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            İrem Tüfekçi
+          </span>
+          <div className="hidden md:flex gap-6 font-medium">
+            <a href="#hakkimda" className="hover:text-blue-600 transition-colors">Hakkımda</a>
+            <a href="#projeler" className="hover:text-blue-600 transition-colors">Projeler</a>
+            <a href="#iletisim" className="hover:text-blue-600 transition-colors">İletişim</a>
+          </div>
+          <button 
+            onClick={() => document.documentElement.classList.toggle('dark')}
+            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            aria-label="Temayı Değiştir"
+          >
+            🌓
+          </button>
+        </nav>
+      </header>
 
-      {/* 2. Main: Ana içerik alanı */}
-      <main id="main-content">
-        {/* Hakkımda Bölümü */}
-        <section id="hakkimda">
-          <h2>Hakkımda</h2>
-          <p>"Fırat Üniversitesi Yazılım Mühendisliği öğrencisiyim. Gömülü sistemler, mikrodenetleyiciler (ESP32, STM32) ve elektronik devre tasarımı üzerine yoğunlaşarak teknik becerilerimi geliştiriyorum. Özellikle havacılık ve roket teknolojilerine duyduğum ilgiyle, uçuş kontrol bilgisayarları ve aviyonik sistemler üzerinde projeler üretiyor, Teknofest gibi yarışmalar için heyecanla çalışıyorum. Yazılım dünyasında hem donanım seviyesinde hem de modern web teknolojilerinde (React, Node.js) çözüm üretmeyi hedefleyen, öğrenmeye tutkulu bir mühendis adayıyım."</p>
-          <img 
-    src="/File.jpg" 
-    alt="İrem Tüfekçi'nin profesyonel vesikalık fotoğrafı" 
-  />
-  <h3>İrem Tüfekçi</h3>
-  <p>Fırat Üniversitesi Yazılım Mühendisliği öğrencisiyim.</p>
-         <h4>Kullandığım Teknolojiler</h4>
-  <ul>
-    <li>C / C++ (Gömülü Sistemler)</li>
-    <li>React & TypeScript</li>
-    
-    <li>C# & .NET</li>
-  </ul>
+      <main className="max-w-6xl mx-auto px-4 py-12 space-y-24">
+        
+        {/* --- HAKKIMDA BÖLÜMÜ --- */}
+        <section id="hakkimda" className="flex flex-col md:flex-row items-center gap-12 pt-10 scroll-mt-20">
+          <div className="md:w-1/3 flex justify-center">
+            <img 
+              src="https://picsum.photos/seed/irem/300/300" 
+              alt="İrem Tüfekçi" 
+              className="w-48 h-48 md:w-64 md:h-64 rounded-full object-cover shadow-2xl border-4 border-white dark:border-gray-800"
+            />
+          </div>
+          <div className="md:w-2/3 space-y-6">
+            <h2 className="text-4xl font-extrabold text-blue-600 dark:text-blue-400 italic">Hakkımda</h2>
+            <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+              Fırat Üniversitesi Yazılım Mühendisliği öğrencisiyim. Gömülü sistemler ve 
+              aviyonik teknolojilere odaklanıyorum. Kullanıcı dostu arayüzler ve 
+              yüksek performanslı sistemler geliştirmek en büyük tutkum.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {['React', 'TypeScript', 'Tailwind', 'STM32', 'Embedded'].map(skill => (
+                <span key={skill} className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-semibold border border-blue-200 dark:border-blue-800">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
         </section>
 
-        {/* Projeler Bölümü */}
-        <section id="projeler">
-          <h2>Projelerim</h2>
-                {/* Umay Projesi */}
-  <article>
-    <h3>Umay Duygu Analizi Sistemi</h3>
-    
-  <p><strong>Teknolojiler:</strong> Python, FastAPI, React, MongoDB</p>
-    <img 
-      src="/umay-main.png" 
-      alt="Umay projesinin kullanıcı arayüzünde analiz sonuçlarını ve önerileri gösteren ekran" 
-    />
-    <p>Ruh haline göre içerik öneren yapay zeka sistemi.</p>
-  </article>
-
-  <br />
-
-  {/* MediaTrack Projesi */}
-  <article>
-    <h3>MediaTrack Hasta Takip Platformu</h3>
-    <p>IoT tabanlı sağlık verisi izleme sistemi.</p>
-    <p><strong>Teknolojiler:</strong> ESP32, C++, Node.js, Socket.io, MongoDB</p>
-    
-    {/* MediaTrack için 3 ayrı resim */}
-    <img 
-      src="/mediatrackanasayfa.png" 
-      alt="MediaTrack kişiye özel anasayfa" 
-    />
-    <img 
-      src="/mediatrackistatikselanaliz.png" 
-      alt="MediaTrack sisteminde sensörden gelen veriler" 
-    />
-    <img 
-      src="/mediatrackgiriş.png" 
-      alt="MediaTrack uygulamasının giriş sayfası" 
-    />
-  </article>
+        {/* --- PROJELERİM --- */}
+        <section id="projeler" className="space-y-10 scroll-mt-20">
+          <h2 className="text-3xl font-bold text-center">Projelerim</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card 
+              title="Umay Duygu Analizi" 
+              image="https://picsum.photos/seed/umay/400/250"
+              variant="elevated"
+            >
+              Yapay zeka ve React kullanarak geliştirdiğim sentiment analiz platformu.
+            </Card>
+            <Card 
+              title="MediaTrack IoT" 
+              image="https://picsum.photos/seed/iot/400/250"
+              variant="elevated"
+            >
+              ESP32 tabanlı gerçek zamanlı hasta takip ve sağlık izleme sistemi.
+            </Card>
+            <Card 
+              title="SkyLogic V2" 
+              image="https://picsum.photos/seed/rocket/400/250"
+              variant="elevated"
+            >
+              Yüksek irtifa roketleri için uçuş kontrol bilgisayarı yazılım mimarisi.
+            </Card>
+          </div>
         </section>
 
-        {/* İletişim Bölümü */}
-        <section id="iletisim">
-          <h2>İletişim</h2>
-             <form action="#" method="POST" noValidate={true}>
-    <fieldset>
-      <legend>İletişim Formu</legend>
-
-      {/* Ad Soyad Alanı */}
-      <div className="form-group">
-        <label htmlFor="name">Ad Soyad:</label>
-        <input 
-          type="text" 
-          id="name" 
-          name="name"
-          required 
-          minLength={2}
-          aria-describedby="name-error" 
-        />
-        <small id="name-error" className="error-msg" role="alert"></small>
-      </div>
-
-      {/* E-posta Alanı */}
-      <div className="form-group">
-        <label htmlFor="email">E-posta:</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email"
-          required
-          aria-describedby="email-error" 
-        />
-        <small id="email-error" className="error-msg" role="alert"></small>
-      </div>
-
-      {/* Konu Seçimi */}
-      <div className="form-group">
-        <label htmlFor="subject">Konu:</label>
-        <select id="subject" name="subject" required aria-describedby="subject-error">
-          <option value="">-- Seçiniz --</option>
-          <option value="is">İş Teklifi</option>
-          <option value="soru">Soru</option>
-          <option value="oneri">Öneri</option>
-        </select>
-        <small id="subject-error" className="error-msg" role="alert"></small>
-      </div>
-
-      {/* Mesaj Alanı */}
-      <div className="form-group">
-        <label htmlFor="message">Mesajınız:</label>
-        <textarea 
-          id="message" 
-          name="message"
-          rows={5} 
-          required 
-          minLength={10}
-          aria-describedby="message-error">
-        </textarea>
-        <small id="message-error" className="error-msg" role="alert"></small>
-      </div>
-
-      <button type="submit">Gönder</button>
-    </fieldset>
-  </form>
+        {/* --- İLETİŞİM --- */}
+        <section id="iletisim" className="max-w-2xl mx-auto bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 scroll-mt-20">
+          <h2 className="text-3xl font-bold mb-8 text-center">İletişim</h2>
+          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <Input id="contact-name" label="Ad Soyad" placeholder="Adınızı giriniz..." />
+            <Input id="contact-email" label="E-posta" type="email" placeholder="iletisim@mail.com" />
+            <Input id="contact-msg" label="Mesajınız" placeholder="Nasıl yardımcı olabilirim?" />
+            <Button variant="primary" className="w-full py-3 shadow-lg shadow-blue-500/30">Gönder</Button>
+          </form>
         </section>
+
       </main>
 
-      {/* 3. Footer: Alt bilgi kısmı */}
-      <footer>
-        <p>&copy; 2026 İrem Tüfekçi. Tüm hakları saklıdır.</p>
-        {/* Sosyal medya bağlantıları eklendi */}
-  <div>
-    <a href="https://github.com/iremtufekci" target="_blank" rel="noopener noreferrer">GitHub</a> | 
-    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"> LinkedIn</a>
-  </div>
+      {/* --- FOOTER --- */}
+      <footer className="py-12 border-t border-gray-200 dark:border-gray-800 text-center text-gray-500">
+        <p>© 2026 İrem Tüfekçi. Tüm hakları saklıdır.</p>
+        <p className="text-xs mt-2 italic text-gray-400">Software Engineer | Embedded Enthusiast</p>
       </footer>
     </div>
   );
