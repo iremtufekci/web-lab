@@ -1,156 +1,179 @@
-function App() {
+// src/App.tsx
+import { useState, useEffect } from "react";
+// Sadece tipleri alırken 'import type' kullanıyoruz
+import type { Project, Category, SortField, SortOrder } from "./types/project";
+import { fetchProjects } from "./services/projectService";
+import { applyFilters } from "./utils/projectHelpers";
+
+// Bileşenlerin
+import Card from "./components/Card";
+import Input from "./components/Input";
+import Button from "./components/Button";
+
+export default function App() {
+  // --- STATE (DURUM) ---
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState<Category | "all">("all");
+  const [sortField, setSortField] = useState<SortField>("year");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // --- VERİ ÇEKME ---
+  useEffect(() => {
+    async function load() {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await fetchProjects();
+        setProjects(data || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Veriler yüklenemedi.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  // --- FİLTRELEME MANTIĞI ---
+  const filtered = applyFilters(
+    projects,
+    search,
+    category,
+    sortField,
+    sortOrder
+  );
+
+  const categories: (Category | "all")[] = ["all", "frontend", "fullstack", "backend"];
+
   return (
-    <div className="App">
-      <a href="#main-content" className="skip-link">Ana içeriğe atla</a>
-      {/* 1. Header: Navigasyon kısmı */}
-      <header>
-  <h1>İrem Tüfekçi</h1> {/* Eksik olan ana başlık */}
-  <nav aria-label="Ana Menü"> {/* aria-label eklendi */}
-    <ul>
-      <li><a href="#hakkimda">Hakkımda</a></li>
-      <li><a href="#projeler">Projeler</a></li>
-      <li><a href="#iletisim">İletişim</a></li>
-    </ul>
-  </nav>
-</header>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 p-4 md:p-8 font-sans">
+      <div className="max-w-6xl mx-auto space-y-8">
+        
+        {/* Başlık Bölümü */}
+        <header className="flex justify-between items-center border-b pb-6 dark:border-gray-800">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent italic">
+            İrem Tüfekçi - Projeler
+          </h1>
+          <button 
+            onClick={() => document.documentElement.classList.toggle('dark')}
+            className="px-4 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:bg-gray-100 transition-colors"
+          >
+            🌓 Tema Değiştir
+          </button>
+        </header>
 
-      {/* 2. Main: Ana içerik alanı */}
-      <main id="main-content">
-        {/* Hakkımda Bölümü */}
-        <section id="hakkimda">
-          <h2>Hakkımda</h2>
-          <p>"Fırat Üniversitesi Yazılım Mühendisliği öğrencisiyim. Gömülü sistemler, mikrodenetleyiciler (ESP32, STM32) ve elektronik devre tasarımı üzerine yoğunlaşarak teknik becerilerimi geliştiriyorum. Özellikle havacılık ve roket teknolojilerine duyduğum ilgiyle, uçuş kontrol bilgisayarları ve aviyonik sistemler üzerinde projeler üretiyor, Teknofest gibi yarışmalar için heyecanla çalışıyorum. Yazılım dünyasında hem donanım seviyesinde hem de modern web teknolojilerinde (React, Node.js) çözüm üretmeyi hedefleyen, öğrenmeye tutkulu bir mühendis adayıyım."</p>
-          <img 
-    src="/File.jpg" 
-    alt="İrem Tüfekçi'nin profesyonel vesikalık fotoğrafı" 
+        {/* Hata Mesajı */}
+        {error && (
+          <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-medium">
+            ⚠️ {error}
+          </div>
+        )}
+
+        {/* Filtreleme ve Arama Paneli */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+          
+          {/* Arama */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Arama</label>
+            <Input 
+              id="project-search-input" // HATAYI ÇÖZEN SATIR BU!
+    placeholder="İsim veya teknoloji yazın..." 
+    value={search} 
+    onChange={(e) => setSearch(e.target.value)}
+    // İstersen label'ı direkt bileşen içinden de verebilirsin:
+    // label="Arama" 
   />
-  <h3>İrem Tüfekçi</h3>
-  <p>Fırat Üniversitesi Yazılım Mühendisliği öğrencisiyim.</p>
-         <h4>Kullandığım Teknolojiler</h4>
-  <ul>
-    <li>C / C++ (Gömülü Sistemler)</li>
-    <li>React & TypeScript</li>
-    
-    <li>C# & .NET</li>
-  </ul>
-        </section>
+</div>
 
-        {/* Projeler Bölümü */}
-        <section id="projeler">
-          <h2>Projelerim</h2>
-                {/* Umay Projesi */}
-  <article>
-    <h3>Umay Duygu Analizi Sistemi</h3>
-    
-  <p><strong>Teknolojiler:</strong> Python, FastAPI, React, MongoDB</p>
-    <img 
-      src="/umay-main.png" 
-      alt="Umay projesinin kullanıcı arayüzünde analiz sonuçlarını ve önerileri gösteren ekran" 
-    />
-    <p>Ruh haline göre içerik öneren yapay zeka sistemi.</p>
-  </article>
+          {/* Kategori Seçimi */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Kategori</label>
+            <div className="flex flex-wrap gap-1">
+              {categories.map(cat => (
+                <Button
+                  key={cat}
+                  onClick={() => setCategory(cat)}
+                  // Variant hatası vermemesi için sadece className ile kontrol ediyoruz
+                  className={`text-[10px] py-1 px-3 ${category === cat ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-800"}`}
+                >
+                  {cat === "all" ? "Tümü" : cat}
+                </Button>
+              ))}
+            </div>
+          </div>
 
-  <br />
+          {/* Sıralama Seçeneği */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Sıralama</label>
+            <select 
+              className="w-full p-2.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+              value={sortField}
+              onChange={(e) => setSortField(e.target.value as SortField)}
+            >
+              <option value="year">Yıla Göre</option>
+              <option value="title">İsme Göre</option>
+            </select>
+          </div>
 
-  {/* MediaTrack Projesi */}
-  <article>
-    <h3>MediaTrack Hasta Takip Platformu</h3>
-    <p>IoT tabanlı sağlık verisi izleme sistemi.</p>
-    <p><strong>Teknolojiler:</strong> ESP32, C++, Node.js, Socket.io, MongoDB</p>
-    
-    {/* MediaTrack için 3 ayrı resim */}
-    <img 
-      src="/mediatrackanasayfa.png" 
-      alt="MediaTrack kişiye özel anasayfa" 
-    />
-    <img 
-      src="/mediatrackistatikselanaliz.png" 
-      alt="MediaTrack sisteminde sensörden gelen veriler" 
-    />
-    <img 
-      src="/mediatrackgiriş.png" 
-      alt="MediaTrack uygulamasının giriş sayfası" 
-    />
-  </article>
-        </section>
+          {/* Sıralama Yönü */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Yön</label>
+            <Button 
+              className="w-full text-xs font-semibold py-2.5 border border-gray-200 dark:border-gray-700"
+              onClick={() => setSortOrder(prev => prev === "asc" ? "desc" : "asc")}
+            >
+              {sortOrder === "asc" ? "⬆ Artan (A-Z)" : "⬇ Azalan (Z-A)"}
+            </Button>
+          </div>
+        </div>
 
-        {/* İletişim Bölümü */}
-        <section id="iletisim">
-          <h2>İletişim</h2>
-             <form action="#" method="POST" noValidate={true}>
-    <fieldset>
-      <legend>İletişim Formu</legend>
+        {/* Yükleniyor / Boş Durum */}
+        {loading && <div className="text-center py-20 animate-pulse text-blue-600 font-medium">Veriler yükleniyor...</div>}
+        
+        {!loading && filtered.length === 0 && (
+          <div className="text-center py-20 bg-gray-100 dark:bg-gray-900/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800">
+            <p className="text-gray-400 italic">Aradığınız kriterlere uygun bir proje bulamadık.</p>
+          </div>
+        )}
 
-      {/* Ad Soyad Alanı */}
-      <div className="form-group">
-        <label htmlFor="name">Ad Soyad:</label>
-        <input 
-          type="text" 
-          id="name" 
-          name="name"
-          required 
-          minLength={2}
-          aria-describedby="name-error" 
-        />
-        <small id="name-error" className="error-msg" role="alert"></small>
+        {/* Proje Kartları Listesi */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filtered.map(project => (
+            <Card 
+              key={project.id}
+              title={project.title}
+              image={`https://picsum.photos/seed/${project.id}/400/250`}
+              // Eğer Card bileşeninde variant="elevated" hata veriyorsa aşağıdaki satırı silebilirsin:
+              // variant="elevated" 
+              footer={
+                <div className="flex justify-between items-center w-full">
+                  <span className="text-[10px] font-bold text-blue-600">{project.category.toUpperCase()}</span>
+                  <span className="text-[10px] text-gray-400 font-mono">{project.year}</span>
+                </div>
+              }
+            >
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
+                {project.description}
+              </p>
+              <div className="flex flex-wrap gap-1.5 mt-auto">
+                {project.tech.map(t => (
+                  <span key={t} className="text-[9px] font-bold bg-blue-50 dark:bg-blue-900/20 text-blue-600 px-2 py-0.5 rounded border border-blue-100 dark:border-blue-800">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {/* Alt Bilgi */}
+        <footer className="text-center text-[10px] text-gray-400 uppercase tracking-widest pt-12 border-t border-gray-100 dark:border-gray-800">
+          Toplam <strong>{projects.length}</strong> projeden <strong>{filtered.length}</strong> tanesi listeleniyor.
+        </footer>
       </div>
-
-      {/* E-posta Alanı */}
-      <div className="form-group">
-        <label htmlFor="email">E-posta:</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email"
-          required
-          aria-describedby="email-error" 
-        />
-        <small id="email-error" className="error-msg" role="alert"></small>
-      </div>
-
-      {/* Konu Seçimi */}
-      <div className="form-group">
-        <label htmlFor="subject">Konu:</label>
-        <select id="subject" name="subject" required aria-describedby="subject-error">
-          <option value="">-- Seçiniz --</option>
-          <option value="is">İş Teklifi</option>
-          <option value="soru">Soru</option>
-          <option value="oneri">Öneri</option>
-        </select>
-        <small id="subject-error" className="error-msg" role="alert"></small>
-      </div>
-
-      {/* Mesaj Alanı */}
-      <div className="form-group">
-        <label htmlFor="message">Mesajınız:</label>
-        <textarea 
-          id="message" 
-          name="message"
-          rows={5} 
-          required 
-          minLength={10}
-          aria-describedby="message-error">
-        </textarea>
-        <small id="message-error" className="error-msg" role="alert"></small>
-      </div>
-
-      <button type="submit">Gönder</button>
-    </fieldset>
-  </form>
-        </section>
-      </main>
-
-      {/* 3. Footer: Alt bilgi kısmı */}
-      <footer>
-        <p>&copy; 2026 İrem Tüfekçi. Tüm hakları saklıdır.</p>
-        {/* Sosyal medya bağlantıları eklendi */}
-  <div>
-    <a href="https://github.com/iremtufekci" target="_blank" rel="noopener noreferrer">GitHub</a> | 
-    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"> LinkedIn</a>
-  </div>
-      </footer>
     </div>
   );
 }
-
-export default App;
