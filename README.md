@@ -5,7 +5,7 @@ Bu proje, Web Tasarımı ve Programlama dersi LAB-1 kapsamında Vite + React + T
 
 ## Geliştirici
 - **Ad Soyad:** İrem Tüfekçi
-- **Öğrenci No:** [Numaranı Buraya Yaz]
+- **Öğrenci No:** 230541040
 
 ## Kullanılan Teknolojiler
 - React 18
